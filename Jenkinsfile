@@ -8,7 +8,10 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'docker build --target build .'
+                sh '''docker build \\
+                    --target build \\
+                    -t "fromdoppler/doppler-docker-playground:production-commit-${GIT_COMMIT}" \\
+                    .'''
             }
         }
         stage('Test') {
@@ -16,25 +19,10 @@ pipeline {
                 sh 'docker build --target test .'
             }
         }
-        stage('Deploy build image') {
+        stage('Publish pre release version images') {
             steps {
-                sh 'sh ./publish-to-dockerhub.sh build-$BUILD_NUMBER'
-            }
-        }
-        stage('Deploy for development') {
-            when {
-                branch 'development'
-            }
-            steps {
-                echo 'TODO: Deploy to development'
-            }
-        }
-        stage('Deploy for production') {
-            when {
-                branch 'master'
-            }
-            steps {
-                sh 'sh ./publish-to-dockerhub.sh beta'
+                // It is a temporal step, in the future we will only publish final version images
+                sh 'sh ./publish-commit-image-to-dockerhub.sh production ${GIT_COMMIT} v0.0.0 commit-${GIT_COMMIT}'
             }
         }
     }
