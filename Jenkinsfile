@@ -11,6 +11,7 @@ pipeline {
                 sh '''docker build \\
                     --target build \\
                     -t "fromdoppler/doppler-docker-playground:production-commit-${GIT_COMMIT}" \\
+                    --build-arg version=production-commit-${GIT_COMMIT} \\
                     .'''
             }
         }
