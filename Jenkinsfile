@@ -8,7 +8,12 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'docker build --target build .'
+                // TODO, for final versions, ensure having the proper version in version.txt in place of the commit number
+                sh '''docker build \\
+                    --target build \\
+                    -t "fromdoppler/doppler-docker-playground:production-commit-${GIT_COMMIT}" \\
+                    --build-arg version=production-commit-${GIT_COMMIT} \\
+                    .'''
             }
         }
         stage('Test') {
@@ -16,26 +21,49 @@ pipeline {
                 sh 'docker build --target test .'
             }
         }
-        stage('Deploy build image') {
+        stage('Publish pre release version images') {
             steps {
-                sh 'sh ./publish-to-dockerhub.sh build-$BUILD_NUMBER'
+                // It is a temporal step, in the future we will only publish final version images
+                sh 'sh ./publish-commit-image-to-dockerhub.sh production ${GIT_COMMIT} v0.0.0 commit-${GIT_COMMIT}'
             }
         }
-        stage('Deploy for development') {
+        stage('Publish final version images') {
             when {
-                branch 'development'
+                expression {
+                    return isVersionTag(readCurrentTag())
+                }
             }
             steps {
-                echo 'TODO: Deploy to development'
+                // TODO, ensure having the proper version in version.txt in place of the commit number
+                sh 'sh publish-commit-image-to-dockerhub.sh production ${GIT_COMMIT} ${TAG_NAME}'
             }
         }
-        stage('Deploy for production') {
+        stage('Generate version') {
             when {
                 branch 'master'
             }
             steps {
-                sh 'sh ./publish-to-dockerhub.sh beta'
+                sh 'TODO: generate a tag automatically'
             }
         }
     }
+}
+
+def boolean isVersionTag(String tag) {
+    echo "checking version tag $tag"
+
+    if (tag == null) {
+        return false
+    }
+
+    // use your preferred pattern
+    def tagMatcher = tag =~ /v\d+\.\d+\.\d+/
+
+    return tagMatcher.matches()
+}
+
+// https://stackoverflow.com/questions/56030364/buildingtag-always-returns-false
+// workaround https://issues.jenkins-ci.org/browse/JENKINS-55987
+def String readCurrentTag() {
+    return sh(returnStdout: true, script: "git describe --tags --match v?*.?*.?* --abbrev=0 --exact-match || echo ''").trim()
 }
