@@ -30,6 +30,7 @@ namespace DopplerDockerPlaygroundTest
             var firstContent = await firstResponse.Content.ReadAsStringAsync();
             Assert.Matches(serverCounterRegex, firstContent);
             var firstServerCounter = ExtractServerCounter(firstContent);
+            Assert.Equal(1, firstServerCounter);
 
             // Act
             var secondResponse = await client.GetAsync(url);
@@ -38,7 +39,7 @@ namespace DopplerDockerPlaygroundTest
             var secondContent = await secondResponse.Content.ReadAsStringAsync();
             Assert.Matches(serverCounterRegex, secondContent);
             var secondServerCounter = ExtractServerCounter(secondContent);
-            Assert.Equal(firstServerCounter + 1, secondServerCounter);
+            Assert.Equal(2, secondServerCounter);
 
             // Act
             var thirdResponse = await client.GetAsync(url);
@@ -47,7 +48,7 @@ namespace DopplerDockerPlaygroundTest
             var thirdContent = await thirdResponse.Content.ReadAsStringAsync();
             Assert.Matches(serverCounterRegex, thirdContent);
             var thirdServerCounter = ExtractServerCounter(thirdContent);
-            Assert.Equal(firstServerCounter + 2, thirdServerCounter);
+            Assert.Equal(3, thirdServerCounter);
         }
     }
 }
