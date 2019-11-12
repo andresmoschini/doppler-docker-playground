@@ -10,21 +10,23 @@ namespace DopplerDockerPlayground.Pages
 {
     public class IndexModel : PageModel
     {
-        private static readonly string _serverId = Guid.NewGuid().ToString();
-        public string ServerId => _serverId;
+        public string ServerId { get; }
 
-        private static int _serverCounter = 0;
         public int ServerCounter { get; }
 
-        public string MachineName { get; } = System.Environment.MachineName;
+        public string MachineName { get; }
 
-        public string GetHostName { get; } = System.Net.Dns.GetHostName();
+        public string GetHostName { get; }
 
         private readonly ILogger<IndexModel> _logger;
-        public IndexModel(ILogger<IndexModel> logger)
+
+        public IndexModel(ILogger<IndexModel> logger, ServerStatus serverStatus)
         {
             _logger = logger;
-            ServerCounter = System.Threading.Interlocked.Add(ref _serverCounter, 1);
+            ServerId = serverStatus.ServerId;
+            ServerCounter = serverStatus.GetAndIncrementCounter();
+            MachineName = serverStatus.MachineName;
+            GetHostName = serverStatus.GetHostName;
         }
 
         public void OnGet()
