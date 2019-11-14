@@ -11,13 +11,7 @@ namespace DopplerDockerPlayground.Pages
 {
     public class IndexModel : PageModel
     {
-        public string ServerId { get; }
-
-        public int ServerCounter { get; }
-
-        public string MachineName { get; }
-
-        public string GetHostName { get; }
+        public ServerStatus ServerStatus { get; }
 
         public PlaygroundSettings PlaygroundSettings { get; }
 
@@ -28,10 +22,7 @@ namespace DopplerDockerPlayground.Pages
             IOptions<PlaygroundSettings> playgroundSettingsAccessor)
         {
             _logger = logger;
-            ServerId = serverStatus.ServerId;
-            ServerCounter = serverStatus.GetAndIncrementCounter();
-            MachineName = serverStatus.MachineName;
-            GetHostName = serverStatus.GetHostName;
+            ServerStatus = serverStatus;
             PlaygroundSettings = playgroundSettingsAccessor.Value;
         }
 

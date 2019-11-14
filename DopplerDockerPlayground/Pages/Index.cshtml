@@ -13,13 +13,13 @@
 	<h1>Doppler Docker Playground</h1>
     <dl>
         <dt>MachineName</dt>
-        <dd>@Model.MachineName</dd>
+        <dd>@(Model.ServerStatus.MachineName)</dd>
         <dt>GetHostName</dt>
-        <dd>@Model.GetHostName</dd>
+        <dd>@(Model.ServerStatus.GetHostName)</dd>
         <dt>ServerId</dt>
-        <dd>@Model.ServerId</dd>
+        <dd>@(Model.ServerStatus.ServerId)</dd>
         <dt>ServerCounter</dt>
-        <dd>@Model.ServerCounter</dd>
+        <dd>@(Model.ServerStatus.GetAndIncrementCounter())</dd>
         <dt>BaseSetting</dt>
         <dd>@(Model.PlaygroundSettings?.BaseSetting)</dd>
         <dt>OverrideSetting</dt>
