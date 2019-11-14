@@ -36,5 +36,14 @@
         <dt>SecretSetting</dt>
         <dd>@(Model.PlaygroundSettings?.SecretSetting)</dd>
     </dl>
+
+    <h2>All configuration entries</h2>
+    @foreach (var entry in Model.ConfigurationEntries)
+    {
+        <dl>
+            <dt>@entry.Key</dt>
+            <dd>@entry.Value</dd>
+        </dl>
+    }
 </body>
 </html>
