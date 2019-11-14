@@ -25,6 +25,8 @@ namespace DopplerDockerPlayground
         {
             services.AddRazorPages();
             services.AddSingleton<ServerStatus>();
+            services.Configure<PlaygroundSettings>(Configuration.GetSection(nameof(PlaygroundSettings)));
+            services.AddOptions();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
