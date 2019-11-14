@@ -11,6 +11,9 @@
 </head>
 <body>
 	<h1>Doppler Docker Playground</h1>
+
+
+    <h2>ServerStatus</h2>
     <dl>
         <dt>MachineName</dt>
         <dd>@(Model.ServerStatus.MachineName)</dd>
@@ -20,14 +23,18 @@
         <dd>@(Model.ServerStatus.ServerId)</dd>
         <dt>ServerCounter</dt>
         <dd>@(Model.ServerStatus.GetAndIncrementCounter())</dd>
+        <dt>AspNetCoreEnvironment</dt>
+        <dd>@(Model.ServerStatus.AspNetCoreEnvironment)</dd>
+    </dl>
+
+    <h2>PlaygroundSettings</h2>
+    <dl>
         <dt>BaseSetting</dt>
         <dd>@(Model.PlaygroundSettings?.BaseSetting)</dd>
         <dt>OverrideSetting</dt>
         <dd>@(Model.PlaygroundSettings?.OverrideSetting)</dd>
         <dt>SecretSetting</dt>
         <dd>@(Model.PlaygroundSettings?.SecretSetting)</dd>
-        <dt>AspNetCoreEnvironment</dt>
-        <dd>@(Model.ServerStatus.AspNetCoreEnvironment)</dd>
     </dl>
 </body>
 </html>
