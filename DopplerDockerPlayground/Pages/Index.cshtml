@@ -25,6 +25,10 @@
         <dd>@(Model.ServerStatus.GetAndIncrementCounter())</dd>
         <dt>AspNetCoreEnvironment</dt>
         <dd>@(Model.ServerStatus.AspNetCoreEnvironment)</dd>
+        <dt>Environment (from environment values)</dt>
+        <dd>@(Model.ServerStatus.Environment)</dd>
+        <dt>Environment (from configuration)</dt>
+        <dd>@(Model.EnvironmentFromConfiguration)</dd>
     </dl>
 
     <h2>PlaygroundSettings</h2>

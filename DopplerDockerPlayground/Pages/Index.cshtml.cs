@@ -16,6 +16,8 @@ namespace DopplerDockerPlayground.Pages
 
         public PlaygroundSettings PlaygroundSettings { get; }
 
+        public string EnvironmentFromConfiguration { get; }
+
         public IEnumerable<KeyValuePair<string, string>> ConfigurationEntries { get; }
 
         private readonly ILogger<IndexModel> _logger;
@@ -28,6 +30,7 @@ namespace DopplerDockerPlayground.Pages
             _logger = logger;
             ServerStatus = serverStatus;
             PlaygroundSettings = playgroundSettingsAccessor.Value;
+            EnvironmentFromConfiguration = configuration.GetValue<string>("ENVIRONMENT");
             ConfigurationEntries = configuration.AsEnumerable();
         }
 
