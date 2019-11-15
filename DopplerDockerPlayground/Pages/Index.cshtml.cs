@@ -5,28 +5,33 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 
 namespace DopplerDockerPlayground.Pages
 {
     public class IndexModel : PageModel
     {
-        public string ServerId { get; }
+        public ServerStatus ServerStatus { get; }
 
-        public int ServerCounter { get; }
+        public PlaygroundSettings PlaygroundSettings { get; }
 
-        public string MachineName { get; }
+        public string EnvironmentFromConfiguration { get; }
 
-        public string GetHostName { get; }
+        public IEnumerable<KeyValuePair<string, string>> ConfigurationEntries { get; }
 
         private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(ILogger<IndexModel> logger, ServerStatus serverStatus)
+        public IndexModel(ILogger<IndexModel> logger,
+            ServerStatus serverStatus,
+            IOptions<PlaygroundSettings> playgroundSettingsAccessor,
+            IConfiguration configuration)
         {
             _logger = logger;
-            ServerId = serverStatus.ServerId;
-            ServerCounter = serverStatus.GetAndIncrementCounter();
-            MachineName = serverStatus.MachineName;
-            GetHostName = serverStatus.GetHostName;
+            ServerStatus = serverStatus;
+            PlaygroundSettings = playgroundSettingsAccessor.Value;
+            EnvironmentFromConfiguration = configuration.GetValue<string>("ENVIRONMENT");
+            ConfigurationEntries = configuration.AsEnumerable();
         }
 
         public void OnGet()

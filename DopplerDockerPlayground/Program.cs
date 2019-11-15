@@ -18,6 +18,11 @@ namespace DopplerDockerPlayground
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(configHost =>
+                {
+                    configHost.AddKeyPerFile("/run/secrets", true);
+                    configHost.AddJsonFile("/run/secrets/appsettings.Secret.json", true);
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
