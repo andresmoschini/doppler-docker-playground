@@ -40,7 +40,7 @@ pipeline {
             steps {
                 sh '''docker build \\
                     -t "fromdoppler/doppler-docker-playground:production-commit-${GIT_COMMIT}" \\
-                    --build-arg version=production-commit-${GIT_COMMIT} \\
+                    --build-arg version=production-${TAG_NAME}+${GIT_COMMIT} \\
                     .'''
                 sh 'sh publish-commit-image-to-dockerhub.sh production ${GIT_COMMIT} ${TAG_NAME}'
             }
