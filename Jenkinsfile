@@ -17,6 +17,11 @@ pipeline {
             }
         }
         stage('Publish pre release version images') {
+            when {
+                expression {
+                    return !isVersionTag(readCurrentTag())
+                }
+            }
             steps {
                 // It is a temporal step, in the future we will only publish final version images
                 sh '''docker build \\
