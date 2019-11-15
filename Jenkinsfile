@@ -33,7 +33,6 @@ pipeline {
                 }
             }
             steps {
-                // TODO, ensure having the proper version in version.txt in place of the commit number
                 sh '''docker build \\
                     -t "fromdoppler/doppler-docker-playground:production-commit-${GIT_COMMIT}" \\
                     --build-arg version=production-commit-${GIT_COMMIT} \\
