@@ -8,12 +8,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                // TODO, for final versions, ensure having the proper version in version.txt in place of the commit number
-                sh '''docker build \\
-                    --target build \\
-                    -t "fromdoppler/doppler-docker-playground:production-commit-${GIT_COMMIT}" \\
-                    --build-arg version=production-commit-${GIT_COMMIT} \\
-                    .'''
+                sh 'docker build --target build .'
             }
         }
         stage('Test') {
@@ -22,8 +17,17 @@ pipeline {
             }
         }
         stage('Publish pre release version images') {
+            when {
+                expression {
+                    return !isVersionTag(readCurrentTag())
+                }
+            }
             steps {
                 // It is a temporal step, in the future we will only publish final version images
+                sh '''docker build \\
+                    -t "fromdoppler/doppler-docker-playground:production-commit-${GIT_COMMIT}" \\
+                    --build-arg version=production-commit-${GIT_COMMIT} \\
+                    .'''
                 sh 'sh ./publish-commit-image-to-dockerhub.sh production ${GIT_COMMIT} v0.0.0 commit-${GIT_COMMIT}'
             }
         }
@@ -34,7 +38,10 @@ pipeline {
                 }
             }
             steps {
-                // TODO, ensure having the proper version in version.txt in place of the commit number
+                sh '''docker build \\
+                    -t "fromdoppler/doppler-docker-playground:production-commit-${GIT_COMMIT}" \\
+                    --build-arg version=production-commit-${GIT_COMMIT} \\
+                    .'''
                 sh 'sh publish-commit-image-to-dockerhub.sh production ${GIT_COMMIT} ${TAG_NAME}'
             }
         }
