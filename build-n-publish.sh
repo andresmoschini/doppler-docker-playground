@@ -99,22 +99,28 @@ else
   preReleasePrefix=""
 fi
 # endregion Ugly code to deal with versions
+imageName=fromdoppler/doppler-docker-playground
+canonicalTag=${preReleasePrefix}${environment}-${versionFullForTag}
 
-docker tag fromdoppler/doppler-docker-playground:${environment}-commit-${commit} fromdoppler/doppler-docker-playground:${preReleasePrefix}${environment}
-docker tag fromdoppler/doppler-docker-playground:${environment}-commit-${commit} fromdoppler/doppler-docker-playground:${preReleasePrefix}${environment}-${versionMayor}
-docker tag fromdoppler/doppler-docker-playground:${environment}-commit-${commit} fromdoppler/doppler-docker-playground:${preReleasePrefix}${environment}-${versionMayorMinor}
-docker tag fromdoppler/doppler-docker-playground:${environment}-commit-${commit} fromdoppler/doppler-docker-playground:${preReleasePrefix}${environment}-${versionMayorMinorPatch}
-docker tag fromdoppler/doppler-docker-playground:${environment}-commit-${commit} fromdoppler/doppler-docker-playground:${preReleasePrefix}${environment}-${versionMayorMinorPatchPre}
-docker tag fromdoppler/doppler-docker-playground:${environment}-commit-${commit} fromdoppler/doppler-docker-playground:${preReleasePrefix}${environment}-${versionFullForTag}
+docker build \
+    -t ${imageName}:${canonicalTag} \
+    --build-arg version=${preReleasePrefix}${environment}-${versionFull} \
+    .
+
+docker tag ${imageName}:${canonicalTag} ${imageName}:${preReleasePrefix}${environment}
+docker tag ${imageName}:${canonicalTag} ${imageName}:${preReleasePrefix}${environment}-${versionMayor}
+docker tag ${imageName}:${canonicalTag} ${imageName}:${preReleasePrefix}${environment}-${versionMayorMinor}
+docker tag ${imageName}:${canonicalTag} ${imageName}:${preReleasePrefix}${environment}-${versionMayorMinorPatch}
+docker tag ${imageName}:${canonicalTag} ${imageName}:${preReleasePrefix}${environment}-${versionMayorMinorPatchPre}
 
 # TODO: It could break concurrent deployments with different docker accounts
 docker login -u="$DOCKER_WRITTER_USERNAME" -p="$DOCKER_WRITTER_PASSWORD"
 
 # TODO: push all tags
 
-docker push fromdoppler/doppler-docker-playground:${preReleasePrefix}${environment}
-docker push fromdoppler/doppler-docker-playground:${preReleasePrefix}${environment}-${versionMayor}
-docker push fromdoppler/doppler-docker-playground:${preReleasePrefix}${environment}-${versionMayorMinor}
-docker push fromdoppler/doppler-docker-playground:${preReleasePrefix}${environment}-${versionMayorMinorPatch}
-docker push fromdoppler/doppler-docker-playground:${preReleasePrefix}${environment}-${versionMayorMinorPatchPre}
-docker push fromdoppler/doppler-docker-playground:${preReleasePrefix}${environment}-${versionFullForTag}
+docker push ${imageName}:${canonicalTag}
+docker push ${imageName}:${preReleasePrefix}${environment}-${versionMayorMinorPatchPre}
+docker push ${imageName}:${preReleasePrefix}${environment}-${versionMayorMinorPatch}
+docker push ${imageName}:${preReleasePrefix}${environment}-${versionMayorMinor}
+docker push ${imageName}:${preReleasePrefix}${environment}-${versionMayor}
+docker push ${imageName}:${preReleasePrefix}${environment}
