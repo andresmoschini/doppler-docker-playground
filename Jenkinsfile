@@ -24,7 +24,7 @@ pipeline {
             }
             steps {
                 // It is a temporal step, in the future we will only publish final version images
-                sh 'sh build-n-publish.sh production ${GIT_COMMIT} v0.0.0 commit-${GIT_COMMIT}'
+                sh 'sh build-n-publish.sh ${GIT_COMMIT} v0.0.0 commit-${GIT_COMMIT}'
             }
         }
         stage('Publish final version images') {
@@ -34,7 +34,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'sh build-n-publish.sh production ${GIT_COMMIT} ${TAG_NAME}'
+                sh 'sh build-n-publish.sh ${GIT_COMMIT} ${TAG_NAME}'
             }
         }
         stage('Generate version') {
